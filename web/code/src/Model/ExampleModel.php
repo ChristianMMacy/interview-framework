@@ -15,38 +15,33 @@ use UnexpectedValueException;
 class ExampleModel extends Model
 {
     public int $id;
+    public ?string $code;
+    public ?string $description;
     public string $created;
-    public string $code;
-    public string $description;
 
     /**
      * CTOR for an Example record.
      *
-     * @param int|null    $id          (Optional) If provided, retrieves an existing example.
-     * @param string|null $code        (Optional if `$id` provided) Example code.
-     * @param string|null $description (Optional if `$id` provided) Example description.
+     * @param string|null $code        (Optional) Example code.
+     * @param string|null $description (Optional) Example description.
      * @param string|null $created     (Optional) Time and date. Defaults to now.
-     * @throws BadInputException
      */
-    public function __construct(int $id = null, string $code = null, string $description = null,
+    public function __construct(string $code = null, string $description = null,
         string $created = null
     )
     {
         parent::__construct();
-        if ($id) {
-            $this->get($id);
-        } else {
-            $this->create($code, $description, $created ?? now());
-        }
+        $this->code = $code;
+        $this->description = $description;
+        $this->created = $created ?? now();
     }
 
     /**
-     * Get example data by ID.
+     * Hydrate example data by ID.
      *
-     * @param int $id example id
      * @throws BadInputException
      */
-    private function get(int $id)
+    public function hydrate(int $id)
     {
         $sql = '
             SELECT
@@ -70,7 +65,6 @@ class ExampleModel extends Model
             $this->description = $results['description'];
             $this->code = $results['code'];
             $this->created = $results['created'];
-            $this->id = $results['id'];
         } else {
             throw new BadInputException('Unknown example ID');
         }
@@ -79,11 +73,8 @@ class ExampleModel extends Model
     /**
      * Create an example.
      *
-     * @param string $code        example code
-     * @param string $description example description
-     * @param string $created     example created on
      */
-    private function create(string $code, string $description, string $created)
+    public function create()
     {
         $sql = '
             INSERT INTO
@@ -100,18 +91,15 @@ class ExampleModel extends Model
             'title'  => 'Create example',
             'sql'    => $sql,
             'inputs' => [
-                $created,
-                $code,
-                $description
+                $this->created,
+                $this->code,
+                $this->description
             ]
         ]);
 
         $this->db->validateAffected();
 
-        // Set values once we know the operation succeeded.
+        // Set ID once we know the operation succeeded.
         $this->id = $id;
-        $this->code = $code;
-        $this->description = $description;
-        $this->created = $created;
     }
 }

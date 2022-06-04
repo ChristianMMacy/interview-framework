@@ -26,12 +26,11 @@ class ExampleView
      *
      * @throws BadInputException if no example data is returned
      */
-    public function get(int $id): string
+    public function get(ExampleModel $model): string
     {
-        $model = new ExampleModel($id); // Throws if no example found with that ID.
+        $model->hydrate($model->id);
 
         $data =  array(
-            'id'          => $model->id,
             'created'     => $model->created,
             'code'        => $model->code,
             'description' => $model->description,

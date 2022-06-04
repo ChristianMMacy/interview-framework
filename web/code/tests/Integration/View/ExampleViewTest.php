@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Example\Tests\Integration\View;
 
+use Example\Model\ExampleModel;
 use Example\Tests\BaseCase;
 use Mini\Controller\Exception\BadInputException;
 
@@ -40,7 +41,9 @@ class ExampleViewTest extends BaseCase
             ]
         ]);
 
-        $view = $this->getClass('Example\View\ExampleView')->get(1);
+        $model = new ExampleModel();
+        $model->id = 1;
+        $view = $this->getClass('Example\View\ExampleView')->get($model);
 
         $this->assertNotEmpty($view);
         $this->assertIsString($view);
@@ -59,6 +62,8 @@ class ExampleViewTest extends BaseCase
     {
         $this->expectException(BadInputException::class);
 
-        $this->getClass('Example\View\ExampleView')->get(1);
+        $model = new ExampleModel();
+        $model->id = 1;
+        $this->getClass('Example\View\ExampleView')->get($model);
     }
 }
