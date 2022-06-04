@@ -49,10 +49,10 @@ class ExampleController extends Controller
             throw new BadInputException('Example description missing');
         }
 
-        $model = new ExampleModel();
+        $model = new ExampleModel(null, $code, $description, now());
 
         return $this->view->get(
-            $model->create(now(), $code, $description)
+            $model->id
         );
     }
 }

@@ -19,19 +19,34 @@ class ExampleModel extends Model
     public string $code;
     public string $description;
 
-    public function __construct()
+    /**
+     * CTOR for an Example record.
+     *
+     * @param int|null    $id          (Optional) If provided, retrieves an existing example.
+     * @param string|null $code        (Optional if `$id` provided) Example code.
+     * @param string|null $description (Optional if `$id` provided) Example description.
+     * @param string|null $created     (Optional) Time and date. Defaults to now.
+     * @throws BadInputException
+     */
+    public function __construct(int $id = null, string $code = null, string $description = null,
+        string $created = null
+    )
     {
         parent::__construct();
+        if ($id) {
+            $this->get($id);
+        } else {
+            $this->create($code, $description, $created ?? now());
+        }
     }
 
     /**
      * Get example data by ID.
      *
      * @param int $id example id
-     *
-     * @return array example data
+     * @throws BadInputException
      */
-    public function get(int $id): array
+    private function get(int $id)
     {
         $sql = '
             SELECT
@@ -56,21 +71,19 @@ class ExampleModel extends Model
             $this->code = $results['code'];
             $this->created = $results['created'];
             $this->id = $results['id'];
+        } else {
+            throw new BadInputException('Unknown example ID');
         }
-
-        return $results;
     }
 
     /**
      * Create an example.
      *
-     * @param string $created     example created on
      * @param string $code        example code
      * @param string $description example description
-     *
-     * @return int example id
+     * @param string $created     example created on
      */
-    public function create(string $created, string $code, string $description): int
+    private function create(string $code, string $description, string $created)
     {
         $sql = '
             INSERT INTO
@@ -100,7 +113,5 @@ class ExampleModel extends Model
         $this->code = $code;
         $this->description = $description;
         $this->created = $created;
-
-        return $id;
     }
 }
