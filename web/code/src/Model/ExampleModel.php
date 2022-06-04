@@ -19,6 +19,11 @@ class ExampleModel extends Model
     public string $code;
     public string $description;
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
      * Get example data by ID.
      *

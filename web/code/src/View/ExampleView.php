@@ -21,18 +21,14 @@ class ExampleView
 
     /**
      * Setup.
-     * 
-     * @param ExampleModel $model example data
      */
-    public function __construct(ExampleModel $model)
+    public function __construct()
     {
-        $this->model = $model;
+        $this->model = new ExampleModel();
     }
 
     /**
      * Get the example view to display its data.
-     * 
-     * @param int $id example id
      * 
      * @return string view template
      *

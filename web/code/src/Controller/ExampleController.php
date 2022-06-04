@@ -16,13 +16,6 @@ use Mini\Http\Request;
 class ExampleController extends Controller
 {
     /**
-     * Example view model.
-     * 
-     * @var Example\Model\ExampleModel|null
-     */
-    protected $model = null;
-
-    /**
      * Example view builder.
      * 
      * @var Example\View\ExampleView|null
@@ -32,12 +25,10 @@ class ExampleController extends Controller
     /**
      * Setup.
      * 
-     * @param ExampleModel $model example data
      * @param ExampleView  $view  example view builder
      */
-    public function __construct(ExampleModel $model, ExampleView $view)
+    public function __construct(ExampleView $view)
     {
-        $this->model = $model;
         $this->view  = $view;
     }
 
@@ -58,8 +49,10 @@ class ExampleController extends Controller
             throw new BadInputException('Example description missing');
         }
 
+        $model = new ExampleModel();
+
         return $this->view->get(
-            $this->model->create(now(), $code, $description)
+            $model->create(now(), $code, $description)
         );
     }
 }

@@ -13,9 +13,6 @@ $definition = (new Definition)->setAutowired(true)->setShared(false)->setPublic(
 $loader->registerClasses($definition, 'Example\\Controller\\', '../src/Controller/*');
 
 $definition = (new Definition)->setAutowired(true)->setShared(false)->setPublic(true);
-$loader->registerClasses($definition, 'Example\\Model\\', '../src/Model/*');
-
-$definition = (new Definition)->setAutowired(true)->setShared(false)->setPublic(true);
 $loader->registerClasses($definition, 'Example\\View\\', '../src/View/*');
 
 $definition = (new Definition)->setAutowired(true)->setShared(false)->setPublic(true);
